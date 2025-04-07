@@ -35,11 +35,20 @@ data:
         {{- end }}
       ],
       durableObjectStorage = (localDisk = "data"),
+      {{- end }}
+      {{- if or .durableObjects.enabled (hasKey . "env") }},
       bindings = [
+        {{- if .durableObjects.enabled }}
         {{- range .durableObjects.namespaces }}
         (name = "{{ .name }}", durableObjectNamespace = "{{ .className }}"),
         {{- end }}
-      ],
+        {{- end }}
+        {{- if hasKey . "env" }}
+        {{- range $key, $value := .env }}
+        (name = {{ $key | quote }}, fromEnvironment = {{ $key | quote }}),
+        {{- end }}
+        {{- end }}
+      ]
       {{- end }}
     );
 ---

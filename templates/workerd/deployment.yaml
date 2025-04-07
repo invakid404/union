@@ -53,6 +53,13 @@ spec:
             - name: worker-data
               mountPath: /app/worker/data
             {{- end }}
+          {{- if hasKey . "env" }}
+          env:
+            {{- range $key, $value := .env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
       volumes:
         # Volume for the worker-specific configuration.
         - name: config
